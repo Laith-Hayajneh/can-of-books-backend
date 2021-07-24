@@ -98,14 +98,14 @@ function updateBooksHandler(request, response) {
   let id = request.params.id;
 
   let { email, bookName, bookDescription, bookStatus } = request.body;
-
-  UserSchema.findOne({ email: email }, (error, items) => {
+console.log(request.body)
+  UserSchema.findOne({ email: email }, (error, userdata) => {
     if (error) {
       response.status(500).send('NOT FOUND')
     }
     else {
 
-      items.books.map(book => {
+      userdata.books.map(book => {
 
 
         if (book._id.toString() === id) {
@@ -122,9 +122,9 @@ function updateBooksHandler(request, response) {
         }
       })
 
-      items.save();
+      userdata.save();
 
-      response.status(200).send(items.books);
+      response.status(200).send(userdata.books);
 
     }
 
