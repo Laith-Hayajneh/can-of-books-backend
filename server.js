@@ -12,7 +12,8 @@ server.use(cors());
 const PORT = 3001;
 server.use(express.json())
 
-mongoose.connect("mongodb://localhost:27017/book", {
+mongoose.connect(`${process.env.MONGODB}`, {
+  // mongoose.connect("mongodb://localhost:27017/book", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -25,12 +26,12 @@ server.get('/user', handleResponse)
 server.get('/books', handleBookResponse)
 server.post('/books', addBookResponse)
 
- 
+
 function addBookResponse(req, res) {
-  console.log('this req.body ',req.body)
+  console.log('this req.body ', req.body)
   let { bookName, bookDesc, bookStatus } = req.body;
   let emailAddress = req.query.email
-  console.log('this email address from add book ,,,,',emailAddress)
+  console.log('this email address from add book ,,,,', emailAddress)
 
   UserSchema.find({ email: emailAddress }, (error, userdata) => {
     if (error) { res.send('cant find user') }
@@ -48,41 +49,41 @@ function addBookResponse(req, res) {
   })
 
 }
- 
+
 // server.get('/books', handleBookResponse)
 // localhost:3001/deleteCat/1?ownerName=razan
-server.delete('/books/:id',deleteBookHandler)
+server.delete('/books/:id', deleteBookHandler)
 // server.delete('/books/:id', deleteBooksHandler)
 
-function deleteBookHandler(req,res) {
+function deleteBookHandler(req, res) {
   // console.log('deeeeeee ');
-  console.log('this is req.query',req.query)
-  
+  console.log('this is req.query', req.query)
+
   // let bookId = Number(req.params.id);
   let bookId = req.params.id;
-  console.log('this is bookId',bookId)
+  console.log('this is bookId', bookId)
   // console.log('this is req.params.bookId',req.params.bookId);
 
   let emailAddress = req.query.email
-  console.log ('this is email address',emailAddress) 
+  console.log('this is email address', emailAddress)
 
-  UserSchema.find({email: emailAddress},(error,userdata)=>{
-      if(error) {res.send('cant find user')}
-      else{
-        //  console.log('before deleting',userdata[0].books)
+  UserSchema.find({ email: emailAddress }, (error, userdata) => {
+    if (error) { res.send('cant find user') }
+    else {
+      //  console.log('before deleting',userdata[0].books)
 
-         let newBooksArr = userdata[0].books.filter(idx=>{
-            //  if(idx !== index) {return book}
-            console.log('ppppppppp',idx._id);
-            
-          return idx._id.toString() !==bookId
-         })
-         userdata[0].books=newBooksArr
-        //  console.log('newbooks array',newBooksArr)
-        //  console.log('after deleting',userdata[0].books)
-         userdata[0].save();
-         res.send(userdata[0].books)
-      }
+      let newBooksArr = userdata[0].books.filter(idx => {
+        //  if(idx !== index) {return book}
+        console.log('ppppppppp', idx._id);
+
+        return idx._id.toString() !== bookId
+      })
+      userdata[0].books = newBooksArr
+      //  console.log('newbooks array',newBooksArr)
+      //  console.log('after deleting',userdata[0].books)
+      userdata[0].save();
+      res.send(userdata[0].books)
+    }
 
   })
 }
@@ -98,7 +99,7 @@ function updateBooksHandler(request, response) {
   let id = request.params.id;
 
   let { email, bookName, bookDescription, bookStatus } = request.body;
-console.log(request.body)
+  console.log(request.body)
   UserSchema.findOne({ email: email }, (error, userdata) => {
     if (error) {
       response.status(500).send('NOT FOUND')
@@ -113,7 +114,7 @@ console.log(request.body)
           book.name = bookName;
           book.description = bookDescription;
           book.status = bookStatus;
-         
+
 
           return book;
         }
@@ -149,7 +150,7 @@ console.log(request.body)
 
 
 
- 
+
 
 //http://localhost:3001/user?email=osqadoomy@gmail.com
 function handleResponse(req, res) {
