@@ -25,11 +25,12 @@ server.get('/user', handleResponse)
 server.get('/books', handleBookResponse)
 server.post('/books', addBookResponse)
 
-
+ 
 function addBookResponse(req, res) {
-  console.log(req.body)
+  console.log('this req.body ',req.body)
   let { bookName, bookDesc, bookStatus } = req.body;
   let emailAddress = req.query.email
+  console.log('this email address from add book ,,,,',emailAddress)
 
   UserSchema.find({ email: emailAddress }, (error, userdata) => {
     if (error) { res.send('cant find user') }
@@ -47,33 +48,85 @@ function addBookResponse(req, res) {
   })
 
 }
-
+ 
 // server.get('/books', handleBookResponse)
 // localhost:3001/deleteCat/1?ownerName=razan
-server.delete('/books/:bookId',deleteBookHandler)
+server.delete('/books/:id',deleteBookHandler)
+// server.delete('/books/:id', deleteBooksHandler)
 
 function deleteBookHandler(req,res) {
-  console.log('deeeeeee');
-  console.log(req.params.bookId);
-  console.log(req.query)
+  // console.log('deeeeeee ');
+  console.log('this is req.query',req.query)
+  
+  // let bookId = Number(req.params.id);
+  let bookId = req.params.id;
+  console.log('this is bookId',bookId)
+  // console.log('this is req.params.bookId',req.params.bookId);
 
-  let index = Number(req.params.bookId);
-  console.log(index)
-  let emailAddress = req.query.email;
-  myOwnerModel.find({email: emailAddress},(error,userdata)=>{
+  let emailAddress = req.query.email
+  console.log ('this is email address',emailAddress) 
+
+  UserSchema.find({email: emailAddress},(error,userdata)=>{
       if(error) {res.send('cant find user')}
       else{
-         console.log('before deleting',userdata[0].books)
+        //  console.log('before deleting',userdata[0].books)
 
-         let newBooksArr = userdata[0].books.filter((book,idx)=>{
+         let newBooksArr = userdata[0].books.filter(idx=>{
             //  if(idx !== index) {return book}
-          return idx!==index
+            console.log('ppppppppp',idx._id);
+            
+          return idx._id.toString() !==bookId
          })
          userdata[0].books=newBooksArr
-         console.log('after deleting',userdata[0].books)
+        //  console.log('newbooks array',newBooksArr)
+        //  console.log('after deleting',userdata[0].books)
          userdata[0].save();
          res.send(userdata[0].books)
       }
+
+  })
+}
+
+
+
+
+server.put('/books/:id', updateBooksHandler)
+
+
+function updateBooksHandler(request, response) {
+
+  let id = request.params.id;
+
+  let { email, bookName, bookDescription, bookStatus } = request.body;
+
+  UserSchema.findOne({ email: email }, (error, items) => {
+    if (error) {
+      response.status(500).send('NOT FOUND')
+    }
+    else {
+
+      items.books.map(book => {
+
+
+        if (book._id.toString() === id) {
+
+          book.name = bookName;
+          book.description = bookDescription;
+          book.status = bookStatus;
+         
+
+          return book;
+        }
+        else {
+          return book;
+        }
+      })
+
+      items.save();
+
+      response.status(200).send(items.books);
+
+    }
 
   })
 }
@@ -86,6 +139,17 @@ function deleteBookHandler(req,res) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+ 
 
 //http://localhost:3001/user?email=osqadoomy@gmail.com
 function handleResponse(req, res) {

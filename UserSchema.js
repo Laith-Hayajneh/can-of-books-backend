@@ -50,7 +50,7 @@ function seedUserCollection() {
       },
     ],
   });
-  // books.save();
+  books.save();
 }
 
 seedUserCollection()
