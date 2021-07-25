@@ -27,8 +27,7 @@ const myUserModel = mongoose.model("User", UserSchema);
 
 
 
-
-
+console.log('laith')
 
 function seedUserCollection() {
   const books = new myUserModel({

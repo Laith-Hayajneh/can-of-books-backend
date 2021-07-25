@@ -12,8 +12,8 @@ server.use(cors());
 const PORT = process.env.PORT;
 server.use(express.json())
 
-// mongoose.connect(`${process.env.MONGODB}`, {
-mongoose.connect("mongodb://localhost:27017/book", {
+mongoose.connect(`${process.env.MONGODB}`, {
+// mongoose.connect("mongodb://localhost:27017/book", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -22,7 +22,7 @@ server.get("/", (req, res) => {
   res.send("Home Route");
 });
 
-server.get('/user', handleResponse)
+// server.get('/user', handleResponse)
 server.get('/books', handleBookResponse)
 server.post('/books', addBookResponse)
 
