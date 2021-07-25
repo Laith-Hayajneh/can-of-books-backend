@@ -52,6 +52,6 @@ function seedUserCollection() {
   books.save();
 }
 
-seedUserCollection()
+// seedUserCollection()
 
 module.exports = myUserModel;
