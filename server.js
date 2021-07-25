@@ -9,11 +9,11 @@ const UserSchema = require('./UserSchema')
 
 server.use(cors());
 
-const PORT = 3001;
+const PORT = process.env.PORT;
 server.use(express.json())
 
-mongoose.connect(`${process.env.MONGODB}`, {
-  // mongoose.connect("mongodb://localhost:27017/book", {
+// mongoose.connect(`${process.env.MONGODB}`, {
+mongoose.connect("mongodb://localhost:27017/book", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
